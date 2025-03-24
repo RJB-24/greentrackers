@@ -8,7 +8,7 @@ import { Truck, BarChart3, Map, Lock, Settings, Bell, Search } from 'lucide-reac
 import { motion } from 'framer-motion';
 import ShipmentTracker from '@/components/dashboard/ShipmentTracker';
 import BlockchainInfo from '@/components/dashboard/BlockchainInfo';
-import Card from '@/components/ui/Card';
+import { Card } from '@/components/ui/card';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("shipments");

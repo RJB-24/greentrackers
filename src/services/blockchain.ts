@@ -1,5 +1,12 @@
-
 import Web3 from 'web3';
+
+// Type definitions for ethereum window object
+declare global {
+  interface Window {
+    ethereum?: any;
+    web3?: any;
+  }
+}
 
 // ABI (Application Binary Interface) for the smart contract
 // This is a simplified example - you would use your actual contract ABI

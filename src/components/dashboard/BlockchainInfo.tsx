@@ -1,9 +1,8 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Lock, CheckCircle, AlertCircle, ExternalLink, Copy, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import Card from '@/components/ui/Card';
+import { Card } from '@/components/ui/card';
 
 interface Transaction {
   id: string;
@@ -78,7 +77,7 @@ const BlockchainInfo = () => {
         </div>
       </div>
 
-      <Card className="mb-6">
+      <Card className="mb-6 p-6">
         <div className="flex items-center space-x-3 mb-6">
           <div className="h-12 w-12 bg-purple/10 rounded-lg flex items-center justify-center">
             <Lock className="h-6 w-6 text-purple" />
@@ -146,7 +145,6 @@ const BlockchainInfo = () => {
               </div>
             </div>
             
-            {/* Expanded Transaction Details */}
             {expandedTx === tx.id && (
               <div className="p-4 bg-gray-50 border-t border-gray-100">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
