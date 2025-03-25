@@ -1,8 +1,9 @@
+
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { isConnectedToBlockchain, getCurrentAccount } from '@/services/blockchain';
 import { ArrowUpRight, CheckCircle, XCircle } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
+import Card from '@/components/ui/Card';
 
 const BlockchainInfo = () => {
   const { data: isConnected, isLoading: isBlockchainLoading } = useQuery({
