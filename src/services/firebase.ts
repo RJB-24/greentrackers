@@ -1,18 +1,18 @@
-
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User } from 'firebase/auth';
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, DocumentData, serverTimestamp } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getAnalytics } from 'firebase/analytics';
 
 // Firebase configuration
-// Replace with your Firebase project configuration
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyCH4dRTpZCJt6sXuCBHvLyHOW1bS3ZvSEQ",
+  authDomain: "greentrackers.firebaseapp.com",
+  projectId: "greentrackers",
+  storageBucket: "greentrackers.firebasestorage.app",
+  messagingSenderId: "30040997857",
+  appId: "1:30040997857:web:5e46971bb7b37f9468dca0",
+  measurementId: "G-000MG7ZLDB"
 };
 
 // Initialize Firebase
@@ -20,6 +20,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
+const analytics = getAnalytics(app);
 
 // Auth functions
 export const loginUser = async (email: string, password: string) => {
@@ -136,4 +137,4 @@ export const uploadFile = async (file: File, path: string) => {
   }
 };
 
-export { app, auth, db, storage };
+export { app, auth, db, storage, analytics };

@@ -1,22 +1,21 @@
+
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { isConnectedToBlockchain, getCurrentAccount } from '@/services/blockchain';
 import { ArrowUpRight, CheckCircle, XCircle } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
+import { Card } from '@/components/ui/card';
 
 const BlockchainInfo = () => {
-  const { data: isConnected, isLoading: isBlockchainLoading } = useQuery(
-    'blockchainConnection',
-    isConnectedToBlockchain
-  );
+  const { data: isConnected, isLoading: isBlockchainLoading } = useQuery({
+    queryKey: ['blockchainConnection'],
+    queryFn: isConnectedToBlockchain
+  });
 
-  const { data: currentAccount, isLoading: isAccountLoading } = useQuery(
-    'currentAccount',
-    getCurrentAccount,
-    {
-      enabled: !!isConnected,
-    }
-  );
+  const { data: currentAccount, isLoading: isAccountLoading } = useQuery({
+    queryKey: ['currentAccount'],
+    queryFn: getCurrentAccount,
+    enabled: !!isConnected,
+  });
 
   return (
     <Card className="p-4 space-y-4">
