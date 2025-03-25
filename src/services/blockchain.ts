@@ -55,8 +55,9 @@ const contractABI = [
   }
 ];
 
-// Replace with your actual deployed contract address on the Ethereum network
-const contractAddress = '0xYourDeployedContractAddressHere';
+// This will be updated with your actual deployed contract address
+// Initially set to null to avoid errors with invalid addresses
+let contractAddress: string | null = null;
 
 // Initialize Web3
 let web3: Web3;
@@ -74,7 +75,8 @@ export const initBlockchain = async () => {
       } catch (error) {
         console.error("User denied account access");
         // Fallback to a read-only connection
-        web3 = new Web3(new Web3.providers.HttpProvider('https://sepolia.infura.io/v3/YOUR_INFURA_PROJECT_ID'));
+        const INFURA_PROJECT_ID = "YOUR_INFURA_PROJECT_ID"; // Replace with your actual Infura Project ID
+        web3 = new Web3(new Web3.providers.HttpProvider(`https://sepolia.infura.io/v3/${INFURA_PROJECT_ID}`));
       }
     } 
     // Check for older web3 browsers
@@ -83,11 +85,16 @@ export const initBlockchain = async () => {
     }
     // Fallback to a read-only connection
     else {
-      web3 = new Web3(new Web3.providers.HttpProvider('https://sepolia.infura.io/v3/YOUR_INFURA_PROJECT_ID'));
+      const INFURA_PROJECT_ID = "YOUR_INFURA_PROJECT_ID"; // Replace with your actual Infura Project ID
+      web3 = new Web3(new Web3.providers.HttpProvider(`https://sepolia.infura.io/v3/${INFURA_PROJECT_ID}`));
     }
 
-    // Initialize the contract
-    contract = new web3.eth.Contract(contractABI, contractAddress);
+    // Only initialize the contract if we have a valid address
+    if (contractAddress) {
+      contract = new web3.eth.Contract(contractABI, contractAddress);
+    } else {
+      console.warn("Contract address not set. Some blockchain features will be unavailable.");
+    }
     
     return true;
   } catch (error) {
@@ -96,9 +103,20 @@ export const initBlockchain = async () => {
   }
 };
 
+// Set contract address after deployment
+export const setContractAddress = (address: string) => {
+  contractAddress = address;
+  if (web3) {
+    contract = new web3.eth.Contract(contractABI, contractAddress);
+  }
+};
+
 // Get total number of shipments
 export const getShipmentCount = async () => {
   try {
+    if (!contract) {
+      throw new Error("Contract not initialized");
+    }
     const count = await contract.methods.getShipmentCount().call();
     return parseInt(count);
   } catch (error) {
@@ -110,6 +128,9 @@ export const getShipmentCount = async () => {
 // Get shipment details
 export const getShipmentDetails = async (shipmentId: string) => {
   try {
+    if (!contract) {
+      throw new Error("Contract not initialized");
+    }
     const details = await contract.methods.getShipmentDetails(shipmentId).call();
     return {
       origin: details[0],
@@ -131,6 +152,9 @@ export const addShipment = async (
   status: string
 ) => {
   try {
+    if (!contract) {
+      throw new Error("Contract not initialized");
+    }
     const accounts = await web3.eth.getAccounts();
     await contract.methods
       .addShipment(shipmentId, origin, destination, status)
@@ -145,6 +169,9 @@ export const addShipment = async (
 // Update shipment status
 export const updateShipmentStatus = async (shipmentId: string, newStatus: string) => {
   try {
+    if (!contract) {
+      throw new Error("Contract not initialized");
+    }
     const accounts = await web3.eth.getAccounts();
     await contract.methods
       .updateShipmentStatus(shipmentId, newStatus)
@@ -159,6 +186,9 @@ export const updateShipmentStatus = async (shipmentId: string, newStatus: string
 // Utility function to verify blockchain connection
 export const isConnectedToBlockchain = async () => {
   try {
+    if (!web3) {
+      await initBlockchain();
+    }
     const accounts = await web3.eth.getAccounts();
     return accounts.length > 0;
   } catch (error) {
@@ -192,6 +222,9 @@ export const getTransactionReceipt = async (txHash: string) => {
 // Listen for blockchain events
 export const subscribeToEvents = (callback: (error: Error | null, event?: any) => void) => {
   try {
+    if (!contract) {
+      throw new Error("Contract not initialized");
+    }
     return contract.events.allEvents()
       .on('data', (event: any) => callback(null, event))
       .on('error', (error: Error) => callback(error));

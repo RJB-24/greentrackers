@@ -36,7 +36,7 @@ const BlockchainInfo = () => {
                 <strong>Current Account:</strong> {currentAccount}
               </p>
               <a
-                href={`https://etherscan.io/address/${currentAccount}`}
+                href={`https://sepolia.etherscan.io/address/${currentAccount}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-500 hover:underline flex items-center gap-1"

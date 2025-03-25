@@ -13,7 +13,7 @@ This document provides step-by-step instructions for setting up the blockchain i
 
 ## Setting Up the Smart Contract Development Environment
 
-### Step 1: Set Up Hardhat Development Environment
+### Step 1: Create a Smart Contracts Directory
 
 1. Create a separate directory for your smart contracts:
    ```bash
@@ -30,9 +30,9 @@ This document provides step-by-step instructions for setting up the blockchain i
    - This will set up a TypeScript environment for your smart contracts.
    - Accept the default project structure.
 
-4. Install OpenZeppelin Contracts (a library for secure smart contract development):
+4. Install required dependencies:
    ```bash
-   npm install @openzeppelin/contracts
+   npm install dotenv @openzeppelin/contracts
    ```
 
 ### Step 2: Create the LogisticsTracker Smart Contract
@@ -41,7 +41,7 @@ This document provides step-by-step instructions for setting up the blockchain i
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.19;
 
 contract LogisticsTracker {
     struct Shipment {
@@ -138,10 +138,20 @@ main()
   });
 ```
 
-### Step 4: Configure Hardhat for Deployment
+### Step 4: Configure Hardhat and Environment Variables
 
-1. Update your `hardhat.config.ts` file:
+1. Create a `.env` file in your `smart-contracts` directory:
+```
+INFURA_API_KEY=your_infura_api_key_here
+PRIVATE_KEY=your_wallet_private_key_without_0x
+```
 
+IMPORTANT: 
+- Get an Infura API key by signing up at https://infura.io/
+- The wallet private key should be from your MetaMask wallet (without the 0x prefix)
+- NEVER share your private key or commit it to version control
+
+2. The hardhat.config.ts file should be configured to use these environment variables:
 ```typescript
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
@@ -149,37 +159,29 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// Make sure to create a .env file with these values
 const INFURA_API_KEY = process.env.INFURA_API_KEY || "";
-const PRIVATE_KEY = process.env.PRIVATE_KEY || "";
+const PRIVATE_KEY = process.env.PRIVATE_KEY?.startsWith("0x") 
+  ? process.env.PRIVATE_KEY.substring(2) 
+  : process.env.PRIVATE_KEY || "";
 
 const config: HardhatUserConfig = {
   solidity: "0.8.19",
   networks: {
-    // For local development/testing
     hardhat: {
       chainId: 1337,
     },
-    // For testnet deployment
     sepolia: {
       url: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
-      accounts: [PRIVATE_KEY],
+      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
     },
-    // For mainnet deployment (be careful!)
     mainnet: {
       url: `https://mainnet.infura.io/v3/${INFURA_API_KEY}`,
-      accounts: [PRIVATE_KEY],
+      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
     },
   },
 };
 
 export default config;
-```
-
-2. Create a `.env` file in your `smart-contracts` directory:
-```
-INFURA_API_KEY=your_infura_api_key
-PRIVATE_KEY=your_wallet_private_key
 ```
 
 ### Step 5: Compile and Deploy the Contract
@@ -189,38 +191,23 @@ PRIVATE_KEY=your_wallet_private_key
    npx hardhat compile
    ```
 
-2. Deploy to a test network (Sepolia):
+2. Deploy to the Sepolia test network:
    ```bash
    npx hardhat run scripts/deploy.ts --network sepolia
    ```
 
-3. Take note of the deployed contract address. You'll need this for the frontend application.
+3. Take note of the deployed contract address printed in the console. You'll need this address to update the frontend code.
 
 ## Integrating with the Frontend Application
 
-### Step 1: Set Up Infura
-
-1. Go to [Infura](https://infura.io/) and create an account
-2. Create a new project
-3. Copy your project ID (API key)
-
-### Step 2: Update the Frontend Configuration
-
-1. In `src/services/blockchain.ts`, replace:
-   - `YOUR_INFURA_PROJECT_ID` with your Infura project ID
-   - `0xYourDeployedContractAddressHere` with your deployed contract address
-
-2. Update the ABI in `src/services/blockchain.ts` if you've modified the contract. You can find the ABI in:
-   ```
-   smart-contracts/artifacts/contracts/LogisticsTracker.sol/LogisticsTracker.json
+1. Update the contract address in `src/services/blockchain.ts`:
+   - Replace the line `let contractAddress: string | null = null;` with:
+   ```typescript
+   let contractAddress = "YOUR_DEPLOYED_CONTRACT_ADDRESS"; // Replace with your actual deployed contract address
    ```
 
-### Step 3: Set Up MetaMask for Testing
-
-1. Install MetaMask browser extension if you haven't already
-2. Create or import a wallet
-3. Connect to the appropriate network (Sepolia testnet or mainnet)
-4. Fund your wallet with ETH (use a faucet for testnet ETH)
+2. Update the Infura Project ID in the same file:
+   - Replace all instances of `YOUR_INFURA_PROJECT_ID` with your actual Infura Project ID.
 
 ## Testing the Integration
 
@@ -229,38 +216,25 @@ PRIVATE_KEY=your_wallet_private_key
    npm run dev
    ```
 
-2. Navigate to the dashboard
-3. Check the BlockchainInfo component to see if it connects to your wallet
-4. Test adding and tracking shipments to verify interaction with your smart contract
+2. Open MetaMask and connect to the Sepolia test network
+3. Navigate to the dashboard to see the blockchain connection status
+4. Test the shipment tracking functionality
 
-## Troubleshooting
+## Common Issues and Solutions
 
-1. **Connection Issues**:
-   - Make sure MetaMask is unlocked
-   - Ensure you're on the correct network in MetaMask
-   - Check console for errors
+1. **"Invalid project id" error**:
+   - Double-check your Infura API key in the `.env` file
+   - Make sure there are no spaces or quotes around the key
+   - Verify the project is active on your Infura dashboard
 
-2. **Transaction Errors**:
-   - Verify you have enough ETH for gas fees
-   - Check that your contract address is correct
-   - Make sure your ABI matches your deployed contract
+2. **Wallet connection errors**:
+   - Ensure MetaMask is installed and unlocked
+   - Make sure you're connected to the correct network (Sepolia)
 
-3. **Web3 Initialization Problems**:
-   - Check that Infura API key is correct
-   - Verify that your browser supports Web3
+3. **Transaction failures**:
+   - Check if your wallet has enough Sepolia ETH (use a faucet to get test ETH)
+   - Verify that the contract address in the frontend is correct
 
-## Next Steps
-
-1. Add more complex smart contract features:
-   - Role-based permissions
-   - Token rewards for sustainable shipping choices
-   - Integration with carbon credit markets
-   - Supply chain verification logic
-
-2. Enhance the frontend integration:
-   - Add transaction history
-   - Display gas cost estimates
-   - Create a more detailed blockchain explorer component
-   - Add support for multiple wallets (WalletConnect, etc.)
-
-By following this guide, you should have a fully functional blockchain-integrated logistics tracking application.
+4. **Smart contract errors**:
+   - Check the Hardhat output for compilation errors
+   - Verify the Solidity version in the contract matches the version in hardhat.config.ts
