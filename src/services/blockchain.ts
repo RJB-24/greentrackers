@@ -1,4 +1,3 @@
-
 import Web3 from 'web3';
 
 // Type definitions for ethereum window object
@@ -56,7 +55,7 @@ const contractABI = [
 ];
 
 // Replace with your actual deployed contract address on the Ethereum network
-const contractAddress = '0xYourContractAddressHere';
+const contractAddress = '0xYourDeployedContractAddressHere';
 
 // Initialize Web3
 let web3: Web3;
@@ -74,7 +73,7 @@ export const initBlockchain = async () => {
       } catch (error) {
         console.error("User denied account access");
         // Fallback to a read-only connection
-        web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/yourInfuraApiKeyHere'));
+        web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID'));
       }
     } 
     // Check for older web3 browsers
@@ -83,7 +82,7 @@ export const initBlockchain = async () => {
     }
     // Fallback to a read-only connection
     else {
-      web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/yourInfuraApiKeyHere'));
+      web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID'));
     }
 
     // Initialize the contract
