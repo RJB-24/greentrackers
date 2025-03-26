@@ -27,13 +27,22 @@ const config: HardhatUserConfig = {
     sepolia: {
       url: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
       accounts: trimmedPrivateKey ? [`0x${trimmedPrivateKey}`] : [],
-      timeout: 60000, // Increase timeout to 60 seconds
+      timeout: 120000, // Increase timeout to 2 minutes (120 seconds)
+      gas: 2100000, // Explicitly set gas limit
+      gasPrice: 8000000000, // 8 gwei
     },
     // For mainnet deployment (be careful!)
     mainnet: {
       url: `https://mainnet.infura.io/v3/${INFURA_API_KEY}`,
       accounts: trimmedPrivateKey ? [`0x${trimmedPrivateKey}`] : [],
     },
+  },
+  // Enable verbose output for debugging
+  paths: {
+    sources: "./contracts",
+    tests: "./test",
+    cache: "./cache",
+    artifacts: "./artifacts"
   },
 };
 

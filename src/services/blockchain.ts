@@ -54,56 +54,69 @@ const contractABI = [
   }
 ];
 
-// This should be updated with your actual deployed contract address
-// After deployment, update this value with your contract address
+// IMPORTANT: Update this after deployment with your actual contract address
 let contractAddress = ""; // Replace with your deployed contract address
 
-// Your Infura API key
+// Your Infura API key - IMPORTANT: Replace with your actual Infura Project ID
 const INFURA_PROJECT_ID = ""; // Replace with your Infura Project ID
 
 // Initialize Web3
 let web3: Web3;
 let contract: any;
 
+// Enhanced logging for debugging
+const logDebug = (message: string, data?: any) => {
+  console.log(`[Blockchain] ${message}`, data || '');
+};
+
 // Initialize the blockchain connection
 export const initBlockchain = async () => {
   try {
     // Check if contractAddress and INFURA_PROJECT_ID are set
-    if (!contractAddress || !INFURA_PROJECT_ID) {
-      console.warn("Contract address or Infura Project ID not set. Please update the blockchain.ts file.");
+    if (!contractAddress) {
+      console.warn("Contract address not set. Please update the blockchain.ts file with your deployed contract address.");
     }
+    
+    if (!INFURA_PROJECT_ID) {
+      console.warn("Infura Project ID not set. Please update the blockchain.ts file with your Infura Project ID.");
+    }
+    
+    logDebug("Initializing blockchain connection...");
     
     // Check if we're in a browser environment with MetaMask
     if (window.ethereum) {
       try {
         // Request account access
+        logDebug("MetaMask detected, requesting accounts...");
         await window.ethereum.request({ method: 'eth_requestAccounts' });
         web3 = new Web3(window.ethereum);
-        console.log("Connected to MetaMask");
+        logDebug("Connected to MetaMask successfully");
       } catch (error) {
-        console.error("User denied account access");
+        logDebug("User denied account access, falling back to read-only mode", error);
         // Fallback to a read-only connection
         web3 = new Web3(new Web3.providers.HttpProvider(`https://sepolia.infura.io/v3/${INFURA_PROJECT_ID}`));
-        console.log("Connected to Infura in read-only mode");
+        logDebug("Connected to Infura in read-only mode");
       }
     } 
     // Check for older web3 browsers
     else if (window.web3) {
+      logDebug("Legacy Web3 browser detected");
       web3 = new Web3(window.web3.currentProvider);
-      console.log("Connected to legacy Web3 browser");
+      logDebug("Connected to legacy Web3 browser");
     }
     // Fallback to a read-only connection
     else {
+      logDebug("No Web3 provider detected, using Infura fallback");
       web3 = new Web3(new Web3.providers.HttpProvider(`https://sepolia.infura.io/v3/${INFURA_PROJECT_ID}`));
-      console.log("Connected to Infura in read-only mode");
+      logDebug("Connected to Infura in read-only mode");
     }
 
     // Only initialize the contract if we have a valid address
     if (contractAddress) {
       contract = new web3.eth.Contract(contractABI, contractAddress);
-      console.log("Contract initialized with address:", contractAddress);
+      logDebug("Contract initialized with address:", contractAddress);
     } else {
-      console.warn("Contract address not set. Some blockchain features will be unavailable.");
+      logDebug("Contract address not set. Some blockchain features will be unavailable.");
     }
     
     return true;
@@ -115,9 +128,11 @@ export const initBlockchain = async () => {
 
 // Set contract address after deployment
 export const setContractAddress = (address: string) => {
+  logDebug(`Setting contract address to: ${address}`);
   contractAddress = address;
   if (web3) {
     contract = new web3.eth.Contract(contractABI, contractAddress);
+    logDebug("Contract reinitialized with new address");
   }
 };
 
@@ -127,7 +142,9 @@ export const getShipmentCount = async () => {
     if (!contract) {
       throw new Error("Contract not initialized");
     }
+    logDebug("Getting shipment count from blockchain...");
     const count = await contract.methods.getShipmentCount().call();
+    logDebug(`Shipment count: ${count}`);
     return parseInt(count);
   } catch (error) {
     console.error("Error getting shipment count:", error);
