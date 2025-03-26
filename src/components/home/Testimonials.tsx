@@ -43,21 +43,21 @@ const Testimonials = () => {
   const testimonials = [
     {
       quote: "TrackLogistics has revolutionized our supply chain operations. The real-time tracking and blockchain verification have increased our transparency and customer trust significantly.",
-      author: "Sarah Johnson",
+      author: "Jagan babu.R",
       role: "Supply Chain Director",
       company: "Global Retail Inc.",
       rating: 5
     },
     {
       quote: "The sustainability recommendations have helped us reduce our carbon footprint by 30% while improving delivery efficiency. It's a win-win for business and the environment.",
-      author: "Michael Chen",
+      author: "Dayanithi.V",
       role: "Operations Manager",
       company: "EcoDelivery Co.",
       rating: 5
     },
     {
       quote: "As a logistics manager, I appreciate the comprehensive analytics and route optimization. It has streamlined our processes and reduced operational costs by 25%.",
-      author: "David Rodriguez",
+      author: "LokeshT.A",
       role: "Logistics Manager",
       company: "FastFreight Logistics",
       rating: 4
