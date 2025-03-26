@@ -1,9 +1,8 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Truck, AlertCircle, CheckCircle, Clock, Calendar, User, Box, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import Card from '@/components/ui/Card';
+import Card from '@/components/ui/Card'; // Import as default rather than named export
 
 interface ShipmentStatus {
   id: string;

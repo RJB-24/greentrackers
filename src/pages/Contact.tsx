@@ -1,11 +1,10 @@
-
 import React from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Mail, Phone, MapPin, Send, MessageSquare } from 'lucide-react';
-import Card from '@/components/ui/Card';
+import Card from '@/components/ui/Card'; // Import as default rather than named export
 
 const Contact = () => {
   return (

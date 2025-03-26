@@ -23,4 +23,6 @@ const Card = ({ children, className, delay = 0 }: CardProps) => {
   );
 };
 
+// Add a named export to match how it's being imported
+export { Card };
 export default Card;
