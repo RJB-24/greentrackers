@@ -10,10 +10,14 @@ const INFURA_API_KEY = process.env.INFURA_API_KEY || "";
 // Remove "0x" prefix if it exists
 const PRIVATE_KEY = process.env.PRIVATE_KEY?.startsWith("0x") 
   ? process.env.PRIVATE_KEY.substring(2) 
-  : process.env.PRIVATE_KEY || "";
+  : (process.env.PRIVATE_KEY || "");
+
+// Trim any whitespace from the private key
+const trimmedPrivateKey = PRIVATE_KEY.trim();
 
 const config: HardhatUserConfig = {
   solidity: "0.8.19", // Use the version matching your contract
+  defaultNetwork: "sepolia", // Set default network to make commands shorter
   networks: {
     // For local development/testing
     hardhat: {
@@ -22,12 +26,13 @@ const config: HardhatUserConfig = {
     // For testnet deployment
     sepolia: {
       url: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
-      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
+      accounts: trimmedPrivateKey ? [`0x${trimmedPrivateKey}`] : [],
+      timeout: 60000, // Increase timeout to 60 seconds
     },
     // For mainnet deployment (be careful!)
     mainnet: {
       url: `https://mainnet.infura.io/v3/${INFURA_API_KEY}`,
-      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
+      accounts: trimmedPrivateKey ? [`0x${trimmedPrivateKey}`] : [],
     },
   },
 };

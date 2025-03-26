@@ -2,8 +2,8 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { isConnectedToBlockchain, getCurrentAccount } from '@/services/blockchain';
-import { ArrowUpRight, CheckCircle, XCircle } from 'lucide-react';
-import Card from '@/components/ui/Card';
+import { ArrowUpRight, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { Card } from '@/components/ui/Card';
 
 const BlockchainInfo = () => {
   const { data: isConnected, isLoading: isBlockchainLoading } = useQuery({
@@ -47,9 +47,26 @@ const BlockchainInfo = () => {
           )}
         </>
       ) : (
-        <div className="flex items-center gap-2 text-red-500">
-          <XCircle className="h-5 w-5" />
-          <p>Not connected to blockchain</p>
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 text-red-500">
+            <XCircle className="h-5 w-5" />
+            <p>Not connected to blockchain</p>
+          </div>
+          <div className="bg-amber-50 border border-amber-200 p-3 rounded-md">
+            <div className="flex items-center gap-2 text-amber-600 mb-2">
+              <AlertTriangle className="h-5 w-5" />
+              <p className="font-medium">Configuration Needed</p>
+            </div>
+            <p className="text-sm text-amber-700">
+              To connect to the blockchain, please make sure that:
+            </p>
+            <ul className="list-disc list-inside text-sm text-amber-700 mt-1 space-y-1">
+              <li>You have deployed your smart contract</li>
+              <li>You have updated the contract address in blockchain.ts</li>
+              <li>You have set a valid Infura Project ID in blockchain.ts</li>
+              <li>You have MetaMask installed and connected to the Sepolia testnet</li>
+            </ul>
+          </div>
         </div>
       )}
     </Card>
