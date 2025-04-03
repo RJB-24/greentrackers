@@ -35,10 +35,12 @@ const Hero = () => {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button className="bg-purple hover:bg-purple/90 text-white font-medium px-8 py-6 rounded-xl text-lg">
-                  Get Started
-                  <ChevronRight className="ml-2 h-5 w-5" />
-                </Button>
+                <Link to="/signup">
+                  <Button className="bg-purple hover:bg-purple/90 text-white font-medium px-8 py-6 rounded-xl text-lg">
+                    Get Started
+                    <ChevronRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
                 <Button variant="outline" className="border-charcoal text-charcoal hover:bg-charcoal hover:text-white font-medium px-8 py-6 rounded-xl text-lg">
                   Request Demo
                 </Button>
