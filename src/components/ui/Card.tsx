@@ -1,28 +1,25 @@
 
 import React from 'react';
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
-interface CardProps {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-}
+// This component is a wrapper around the shadcn/ui Card component
+// with some additional styling and functionality
+const Card = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      "rounded-lg border bg-card text-card-foreground shadow-sm",
+      className
+    )}
+    {...props}
+  />
+));
 
-const Card = ({ children, className, delay = 0 }: CardProps) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay }}
-      viewport={{ once: true }}
-      className={cn("glass-card p-6 rounded-xl", className)}
-    >
-      {children}
-    </motion.div>
-  );
-};
+Card.displayName = "Card";
 
-// Add a named export to match how it's being imported
+// Also export as named export to resolve the import issues
 export { Card };
 export default Card;

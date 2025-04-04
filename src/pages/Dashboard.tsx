@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -7,6 +8,7 @@ import { Truck, BarChart3, Map, Lock, Settings, Bell, Search } from 'lucide-reac
 import { motion } from 'framer-motion';
 import ShipmentTracker from '@/components/dashboard/ShipmentTracker';
 import BlockchainInfo from '@/components/dashboard/BlockchainInfo';
+import BlockchainSetupHelper from '@/components/blockchain/SetupHelper';
 import Card from '@/components/ui/Card';
 
 const Dashboard = () => {
@@ -139,9 +141,10 @@ const Dashboard = () => {
           
           {/* Main Dashboard Tabs */}
           <Tabs defaultValue="shipments" className="w-full" onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-2 md:w-[400px] mb-8">
+            <TabsList className="grid grid-cols-3 md:w-[600px] mb-8">
               <TabsTrigger value="shipments">Shipment Tracking</TabsTrigger>
               <TabsTrigger value="blockchain">Blockchain Data</TabsTrigger>
+              <TabsTrigger value="setup">Setup</TabsTrigger>
             </TabsList>
             
             <TabsContent value="shipments" className="space-y-6">
@@ -161,6 +164,16 @@ const Dashboard = () => {
                 transition={{ duration: 0.3 }}
               >
                 <BlockchainInfo />
+              </motion.div>
+            </TabsContent>
+            
+            <TabsContent value="setup" className="space-y-6">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                <BlockchainSetupHelper />
               </motion.div>
             </TabsContent>
           </Tabs>

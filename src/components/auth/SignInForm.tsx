@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { signIn } from '@/services/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import Card from '@/components/ui/Card'; // Import as default instead of named
+import Card from '@/components/ui/Card'; // Import as default
 import { useToast } from '@/hooks/use-toast';
 
 const SignInForm = () => {

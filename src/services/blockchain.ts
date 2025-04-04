@@ -1,4 +1,3 @@
-
 import Web3 from 'web3';
 
 // Type definitions for ethereum window object
@@ -54,10 +53,8 @@ const contractABI = [
   }
 ];
 
-// IMPORTANT: Update this after deployment with your actual contract address
-let contractAddress = ""; // Replace with your deployed contract address
-
-// Your Infura API key - IMPORTANT: Replace with your actual Infura Project ID
+// Update these values with your actual deployed contract address and Infura Project ID
+let contractAddress = ""; // Replace with your deployed contract address from Sepolia
 const INFURA_PROJECT_ID = ""; // Replace with your Infura Project ID
 
 // Initialize Web3
