@@ -20,6 +20,6 @@ const Card = React.forwardRef<
 
 Card.displayName = "Card";
 
-// Also export as named export to resolve the import issues
+// Export as both default and named export to resolve import issues
 export { Card };
 export default Card;
